@@ -197,8 +197,8 @@ typedef enum {
 /*----------------------------------------------------------------------
 name		args	description
 ------------------------------------------------------------------------*/
-OP_MOVE,/*	A B	R[A] := R[B]					*/
-OP_LOADI,/*	A sBx	R[A] := sBx					*/
+OP_MOVE,/*	A B	R[A] := R[B]					*/ // move from register B to register A
+OP_LOADI,/*	A sBx	R[A] := sBx					*/ // load 
 OP_LOADF,/*	A sBx	R[A] := (lua_Number)sBx				*/
 OP_LOADK,/*	A Bx	R[A] := K[Bx]					*/
 OP_LOADKX,/*	A 	R[A] := K[extra arg]				*/
