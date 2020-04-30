@@ -25,12 +25,13 @@ isJ                           sJ(25)                     |   Op(7)     |
 
   A signed argument is represented in excess K: the represented value is
   the written unsigned value minus K, where K is half the maximum for the
-  corresponding unsigned argument.
+  corresponding unsigned argument. // the max and min value of signed
 ===========================================================================*/
 
 
 enum OpMode {iABC, iABx, iAsBx, iAx, isJ};  /* basic instruction formats */
 
+// iAsBx is a signed instruction with 17bits, others are unsigned
 
 /*
 ** size and position of opcode arguments.
@@ -42,18 +43,18 @@ enum OpMode {iABC, iABx, iAsBx, iAx, isJ};  /* basic instruction formats */
 #define SIZE_Ax		(SIZE_Bx + SIZE_A)
 #define SIZE_sJ		(SIZE_Bx + SIZE_A)
 
-#define SIZE_OP		7
+#define SIZE_OP		7 // size of op_code is 7 bits
 
-#define POS_OP		0
+#define POS_OP		0 // start position of op_code
 
-#define POS_A		(POS_OP + SIZE_OP)
+#define POS_A		(POS_OP + SIZE_OP) // start position of A
 #define POS_k		(POS_A + SIZE_A)
 #define POS_B		(POS_k + 1)
 #define POS_C		(POS_B + SIZE_B)
 
 #define POS_Bx		POS_k
 
-#define POS_Ax		POS_A
+#define POS_Ax		POS_A // start of position Ax and sJ are the same with A
 
 #define POS_sJ		POS_A
 
@@ -66,7 +67,7 @@ enum OpMode {iABC, iABx, iAsBx, iAx, isJ};  /* basic instruction formats */
 
 /* Check whether type 'int' has at least 'b' bits ('b' < 32) */
 #define L_INTHASBITS(b)		((UINT_MAX >> ((b) - 1)) >= 1)
-
+// move uint_max (b - 1) bits, check if the result larger than 1 to make sure the int has more than b bits. Here b is 32
 
 #if L_INTHASBITS(SIZE_Bx)
 #define MAXARG_Bx	((1<<SIZE_Bx)-1)
@@ -197,8 +198,8 @@ typedef enum {
 /*----------------------------------------------------------------------
 name		args	description
 ------------------------------------------------------------------------*/
-OP_MOVE,/*	A B	R[A] := R[B]					*/
-OP_LOADI,/*	A sBx	R[A] := sBx					*/
+OP_MOVE,/*	A B	R[A] := R[B]					*/ // move from register B to register A
+OP_LOADI,/*	A sBx	R[A] := sBx					*/ // load 
 OP_LOADF,/*	A sBx	R[A] := (lua_Number)sBx				*/
 OP_LOADK,/*	A Bx	R[A] := K[Bx]					*/
 OP_LOADKX,/*	A 	R[A] := K[extra arg]				*/
