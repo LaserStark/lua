@@ -216,7 +216,7 @@ OP_GETI,/*	A B C	R[A] := R[B][C]					*/
 OP_GETFIELD,/*	A B C	R[A] := R[B][K[C]:string]			*/
 
 OP_SETTABUP,/*	A B C	UpValue[A][K[B]:string] := RK(C)		*/
-OP_SETTABLE,/*	A B C	R[A][R[B]] := RK(C)				*/
+OP_SETTABLE,/*	A B C	R[A][R[B]] := RK(C)				*/ // Set the hash part of table.
 OP_SETI,/*	A B C	R[A][B] := RK(C)				*/
 OP_SETFIELD,/*	A B C	R[A][K[B]:string] := RK(C)			*/
 
@@ -259,12 +259,12 @@ OP_MMBIN,/*	A B C	call C metamethod over R[A] and R[B]		*/
 OP_MMBINI,/*	A sB C k	call C metamethod over R[A] and sB	*/
 OP_MMBINK,/*	A B C k		call C metamethod over R[A] and K[B]	*/
 
-OP_UNM,/*	A B	R[A] := -R[B]					*/
+OP_UNM,/*	A B	R[A] := -R[B]					*/ // negetive value
 OP_BNOT,/*	A B	R[A] := ~R[B]					*/
-OP_NOT,/*	A B	R[A] := not R[B]				*/
-OP_LEN,/*	A B	R[A] := length of R[B]				*/
+OP_NOT,/*	A B	R[A] := not R[B]				*/ // opposite value
+OP_LEN,/*	A B	R[A] := length of R[B]				*/ // length of object, eg. local len = #"str";
 
-OP_CONCAT,/*	A B  	R[A] := R[A].. ... ..R[A + B - 1]		*/
+OP_CONCAT,/*	A B  	R[A] := R[A].. ... ..R[A + B - 1]		*/ // connect the strings stored in register A to register A + B -1
 
 OP_CLOSE,/*	A	close all upvalues >= R[A]			*/
 OP_TBC,/*	A	mark variable A "to be closed"			*/
@@ -298,7 +298,7 @@ OP_TFORPREP,/*	A Bx	create upvalue for R[A + 3]; pc+=Bx		*/
 OP_TFORCALL,/*	A C	R[A+4], ... ,R[A+3+C] := R[A](R[A+1], R[A+2]);	*/
 OP_TFORLOOP,/*	A Bx	if R[A+2] ~= nil then { R[A]=R[A+2]; pc -= Bx }	*/
 
-OP_SETLIST,/*	A B C k	R[A][(C-1)*FPF+i] := R[A+i], 1 <= i <= B	*/ // help to set the table, where C means the Cth circle set.
+OP_SETLIST,/*	A B C k	R[A][(C-1)*FPF+i] := R[A+i], 1 <= i <= B	*/ // help to set the array of table, where C means the Cth circle set.
 
 OP_CLOSURE,/*	A Bx	R[A] := closure(KPROTO[Bx])			*/
 
