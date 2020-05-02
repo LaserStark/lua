@@ -188,7 +188,7 @@ enum OpMode {iABC, iABx, iAsBx, iAx, isJ};  /* basic instruction formats */
 ** K[x] - constant (in constant table)
 ** RK(x) == if k(i) then K[x] else R[x]
 */
-
+// locals and constances
 
 /*
 ** grep "ORDER OP" if you change these enums
@@ -198,20 +198,20 @@ typedef enum {
 /*----------------------------------------------------------------------
 name		args	description
 ------------------------------------------------------------------------*/
-OP_MOVE,/*	A B	R[A] := R[B]					*/ // move from register B to register A
-OP_LOADI,/*	A sBx	R[A] := sBx					*/ // load 
+OP_MOVE,/*	A B	R[A] := R[B]					*/ // move locals from register B to register A
+OP_LOADI,/*	A sBx	R[A] := sBx					*/
 OP_LOADF,/*	A sBx	R[A] := (lua_Number)sBx				*/
-OP_LOADK,/*	A Bx	R[A] := K[Bx]					*/
+OP_LOADK,/*	A Bx	R[A] := K[Bx]					*/ // load constant to register
 OP_LOADKX,/*	A 	R[A] := K[extra arg]				*/
 OP_LOADFALSE,/*	A  	R[A] := false					*/
 OP_LFALSESKIP,/*A 	R[A] := false; pc++				*/
 OP_LOADTRUE,/*	A	R[A] := true					*/
-OP_LOADNIL,/*	A B	R[A], R[A+1], ..., R[A+B] := nil		*/
-OP_GETUPVAL,/*	A B	R[A] := UpValue[B]				*/
-OP_SETUPVAL,/*	A B	UpValue[B] := R[A]				*/
+OP_LOADNIL,/*	A B	R[A], R[A+1], ..., R[A+B] := nil		*/ // set all the registers from A to B as nil
+OP_GETUPVAL,/*	A B	R[A] := UpValue[B]				*/ // 1.local value in current funtion; 2. upval in invoker's function
+OP_SETUPVAL,/*	A B	UpValue[B] := R[A]				*/ // 3.global value in _ENV
 
-OP_GETTABUP,/*	A B C	R[A] := UpValue[B][K[C]:string]			*/
-OP_GETTABLE,/*	A B C	R[A] := R[B][R[C]]				*/
+OP_GETTABUP,/*	A B C	R[A] := UpValue[B][K[C]:string]			*/ // take upvalue B as start of table, C as index
+OP_GETTABLE,/*	A B C	R[A] := R[B][R[C]]				*/ // Here TAB means table
 OP_GETI,/*	A B C	R[A] := R[B][C]					*/
 OP_GETFIELD,/*	A B C	R[A] := R[B][K[C]:string]			*/
 
@@ -220,13 +220,13 @@ OP_SETTABLE,/*	A B C	R[A][R[B]] := RK(C)				*/
 OP_SETI,/*	A B C	R[A][B] := RK(C)				*/
 OP_SETFIELD,/*	A B C	R[A][K[B]:string] := RK(C)			*/
 
-OP_NEWTABLE,/*	A B C k	R[A] := {}					*/
+OP_NEWTABLE,/*	A B C k	R[A] := {}					*/ // an object stored in register A, B and C stand for the size of array and hash.
 
 OP_SELF,/*	A B C	R[A+1] := R[B]; R[A] := R[B][RK(C):string]	*/
 
 OP_ADDI,/*	A B sC	R[A] := R[B] + sC				*/
 
-OP_ADDK,/*	A B C	R[A] := R[B] + K[C]				*/
+OP_ADDK,/*	A B C	R[A] := R[B] + K[C]				*/ // math operation: with constants
 OP_SUBK,/*	A B C	R[A] := R[B] - K[C]				*/
 OP_MULK,/*	A B C	R[A] := R[B] * K[C]				*/
 OP_MODK,/*	A B C	R[A] := R[B] % K[C]				*/
@@ -241,7 +241,7 @@ OP_BXORK,/*	A B C	R[A] := R[B] ~ K[C]:integer			*/
 OP_SHRI,/*	A B sC	R[A] := R[B] >> sC				*/
 OP_SHLI,/*	A B sC	R[A] := sC << R[B]				*/
 
-OP_ADD,/*	A B C	R[A] := R[B] + R[C]				*/
+OP_ADD,/*	A B C	R[A] := R[B] + R[C]				*/ // math opration: add, substract, multiply, divide, mod, pow
 OP_SUB,/*	A B C	R[A] := R[B] - R[C]				*/
 OP_MUL,/*	A B C	R[A] := R[B] * R[C]				*/
 OP_MOD,/*	A B C	R[A] := R[B] % R[C]				*/
@@ -298,7 +298,7 @@ OP_TFORPREP,/*	A Bx	create upvalue for R[A + 3]; pc+=Bx		*/
 OP_TFORCALL,/*	A C	R[A+4], ... ,R[A+3+C] := R[A](R[A+1], R[A+2]);	*/
 OP_TFORLOOP,/*	A Bx	if R[A+2] ~= nil then { R[A]=R[A+2]; pc -= Bx }	*/
 
-OP_SETLIST,/*	A B C k	R[A][(C-1)*FPF+i] := R[A+i], 1 <= i <= B	*/
+OP_SETLIST,/*	A B C k	R[A][(C-1)*FPF+i] := R[A+i], 1 <= i <= B	*/ // help to set the table, where C means the Cth circle set.
 
 OP_CLOSURE,/*	A Bx	R[A] := closure(KPROTO[Bx])			*/
 
