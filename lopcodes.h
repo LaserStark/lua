@@ -222,7 +222,7 @@ OP_SETFIELD,/*	A B C	R[A][K[B]:string] := RK(C)			*/
 
 OP_NEWTABLE,/*	A B C k	R[A] := {}					*/ // an object stored in register A, B and C stand for the size of array and hash.
 
-OP_SELF,/*	A B C	R[A+1] := R[B]; R[A] := R[B][RK(C):string]	*/
+OP_SELF,/*	A B C	R[A+1] := R[B]; R[A] := R[B][RK(C):string]	*/ // get the closure bind with C in the table B, move the table B to register A+1
 
 OP_ADDI,/*	A B sC	R[A] := R[B] + sC				*/
 
@@ -268,7 +268,7 @@ OP_CONCAT,/*	A B  	R[A] := R[A].. ... ..R[A + B - 1]		*/ // connect the strings 
 
 OP_CLOSE,/*	A	close all upvalues >= R[A]			*/
 OP_TBC,/*	A	mark variable A "to be closed"			*/
-OP_JMP,/*	sJ	pc += sJ  					*/
+OP_JMP,/*	sJ	pc += sJ  					*/ // jump the pos with a 
 OP_EQ,/*	A B k	if ((R[A] == R[B]) ~= k) then pc++		*/
 OP_LT,/*	A B k	if ((R[A] <  R[B]) ~= k) then pc++		*/
 OP_LE,/*	A B k	if ((R[A] <= R[B]) ~= k) then pc++		*/
@@ -283,8 +283,8 @@ OP_GEI,/*	A sB k	if ((R[A] >= sB) ~= k) then pc++		*/
 OP_TEST,/*	A k 	if (not R[A] == k) then pc++			*/
 OP_TESTSET,/*	A B k	if (not R[B] == k) then pc++ else R[A] := R[B]	*/
 
-OP_CALL,/*	A B C	R[A], ... ,R[A+C-2] := R[A](R[A+1], ... ,R[A+B-1]) */
-OP_TAILCALL,/*	A B C k	return R[A](R[A+1], ... ,R[A+B-1])		*/
+OP_CALL,/*	A B C	R[A], ... ,R[A+C-2] := R[A](R[A+1], ... ,R[A+B-1]) */ // call function stored in register A. arguments from A+1 to A+B-1， return C-1
+OP_TAILCALL,/*	A B C k	return R[A](R[A+1], ... ,R[A+B-1])		*/ // only one funtion invoke in statement
 
 OP_RETURN,/*	A B C k	return R[A], ... ,R[A+B-2]	(see note)	*/
 OP_RETURN0,/*	  	return 						*/
@@ -300,9 +300,9 @@ OP_TFORLOOP,/*	A Bx	if R[A+2] ~= nil then { R[A]=R[A+2]; pc -= Bx }	*/
 
 OP_SETLIST,/*	A B C k	R[A][(C-1)*FPF+i] := R[A+i], 1 <= i <= B	*/ // help to set the array of table, where C means the Cth circle set.
 
-OP_CLOSURE,/*	A Bx	R[A] := closure(KPROTO[Bx])			*/
+OP_CLOSURE,/*	A Bx	R[A] := closure(KPROTO[Bx])			*/ // create a closure for the function prototype
 
-OP_VARARG,/*	A C  	R[A], R[A+1], ..., R[A+C-2] = vararg		*/
+OP_VARARG,/*	A C  	R[A], R[A+1], ..., R[A+C-2] = vararg		*/ // varia argument
 
 OP_VARARGPREP,/*A 	(adjust vararg parameters)			*/
 
